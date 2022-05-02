@@ -24,21 +24,21 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 function modelReadAudio(path) {
-  // const DeepSpeech = require("deepspeech");
+  const DeepSpeech = require("deepspeech");
   // const Sox = require("sox-stream");
   // const MemoryStream = require("memory-stream");
   // const Duplex = require("stream").Duplex;
   const wav = require("node-wav");
 
-  // let modelPath = "./models/deepspeech-0.9.3-models.pbmm";
+  let modelPath = "./models/deepspeech-0.9.3-models.pbmm";
 
-  // let model = new DeepSpeech.Model(modelPath);
+  let model = new DeepSpeech.Model(modelPath);
 
-  // let desiredSampleRate = model.sampleRate();
+  let desiredSampleRate = model.sampleRate();
 
-  // let scorerPath = "./models/deepspeech-0.9.3-models.scorer";
+  let scorerPath = "./models/deepspeech-0.9.3-models.scorer";
 
-  // model.enableExternalScorer(scorerPath);
+  model.enableExternalScorer(scorerPath);
 
   // const result = Wav.decode(buffer);
 
