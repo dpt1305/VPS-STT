@@ -25,10 +25,11 @@ var upload = multer({ storage: storage });
 
 function modelReadAudio(path) {
   const DeepSpeech = require("deepspeech");
+  const Fs = require("fs-extra");
   const Sox = require("sox-stream");
   const MemoryStream = require("memory-stream");
   const Duplex = require("stream").Duplex;
-  const wav = require("node-wav");
+  const Wav = require("node-wav");
 
   let modelPath = "./models/deepspeech-0.9.3-models.pbmm";
 
@@ -40,17 +41,25 @@ function modelReadAudio(path) {
 
   model.enableExternalScorer(scorerPath);
 
-  // const result = Wav.decode(buffer);
+  let audioFile = process.argv[2] || "./audio/2830-3980-0043.wav";
 
-  // if (result.sampleRate < desiredSampleRate) {
-  //   console.error(
-  //     "Warning: original sample rate (" +
-  //       result.sampleRate +
-  //       ") is lower than " +
-  //       desiredSampleRate +
-  //       "Hz. Up-sampling might produce erratic speech recognition."
-  //   );
-  // }
+  if (!Fs.existsSync(audioFile)) {
+    console.log("file missing:", audioFile);
+    process.exit();
+  }
+
+  const buffer = Fs.readFileSync(audioFile);
+  const result = Wav.decode(buffer);
+
+  if (result.sampleRate < desiredSampleRate) {
+    console.error(
+      "Warning: original sample rate (" +
+        result.sampleRate +
+        ") is lower than " +
+        desiredSampleRate +
+        "Hz. Up-sampling might produce erratic speech recognition."
+    );
+  }
 
   function bufferToStream(buffer) {
     let stream = new Duplex();
@@ -58,13 +67,8 @@ function modelReadAudio(path) {
     stream.push(null);
     return stream;
   }
-  let buffer = fs.readFileSync(path);
-  // let result = wav.decode(buffer);
-  // console.log(buffer);
-  
+
   let audioStream = new MemoryStream();
-  // let audioStream = buffer;
-  
   bufferToStream(buffer)
     .pipe(
       Sox({
@@ -83,21 +87,18 @@ function modelReadAudio(path) {
       })
     )
     .pipe(audioStream);
-  console.log(audioStream);
-  // let result = model.stt(buffer);
-  // console.log("result:", result);
-  // return result;
-  // audioStream.on("close", () => {
-  //   let audioBuffer = audioStream.toBuffer();
 
-  //   const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
-  //   console.log("audio length", audioLength);
+  audioStream.on("finish", () => {
+    let audioBuffer = audioStream.toBuffer();
 
-  //   let result = model.stt(audioBuffer);
-  //   console.log("result:", result);
+    const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
+    console.log("audio length", audioLength);
 
-  //   return result;
-  // });
+    let result = model.stt(audioBuffer);
+    console.log("result:", result);
+
+    return result;
+  });
 }
 
 app.post("/uploadfile", upload.single("file"), (req, res, next) => {
