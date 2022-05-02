@@ -41,7 +41,7 @@ function modelReadAudio(path) {
 
   model.enableExternalScorer(scorerPath);
 
-  let audioFile = process.argv[2] || "./audio/2830-3980-0043.wav";
+  let audioFile = path;
 
   if (!Fs.existsSync(audioFile)) {
     console.log("file missing:", audioFile);
