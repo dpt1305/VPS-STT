@@ -25,9 +25,9 @@ var upload = multer({ storage: storage });
 
 function modelReadAudio(path) {
   const DeepSpeech = require("deepspeech");
-  // const Sox = require("sox-stream");
-  // const MemoryStream = require("memory-stream");
-  // const Duplex = require("stream").Duplex;
+  const Sox = require("sox-stream");
+  const MemoryStream = require("memory-stream");
+  const Duplex = require("stream").Duplex;
   const wav = require("node-wav");
 
   let modelPath = "./models/deepspeech-0.9.3-models.pbmm";
@@ -62,30 +62,31 @@ function modelReadAudio(path) {
   // let result = wav.decode(buffer);
   // console.log(buffer);
   
-  // let audioStream = new MemoryStream();
+  let audioStream = new MemoryStream();
   // let audioStream = buffer;
-  let result = model.stt(buffer);
-  console.log("result:", result);
-  return result;
-  // bufferToStream(buffer)
-  //   .pipe(
-  //     Sox({
-  //       global: {
-  //         "no-dither": true,
-  //       },
-  //       output: {
-  //         bits: 16,
-  //         rate: desiredSampleRate,
-  //         channels: 1,
-  //         encoding: "signed-integer",
-  //         endian: "little",
-  //         compression: 0.0,
-  //         type: "raw",
-  //       },
-  //     })
-  //   )
-  //   .pipe(audioStream);
-
+  
+  bufferToStream(buffer)
+    .pipe(
+      Sox({
+        global: {
+          "no-dither": true,
+        },
+        output: {
+          bits: 16,
+          rate: desiredSampleRate,
+          channels: 1,
+          encoding: "signed-integer",
+          endian: "little",
+          compression: 0.0,
+          type: "raw",
+        },
+      })
+    )
+    .pipe(audioStream);
+  console.log(audioStream);
+  // let result = model.stt(buffer);
+  // console.log("result:", result);
+  // return result;
   // audioStream.on("close", () => {
   //   let audioBuffer = audioStream.toBuffer();
 
