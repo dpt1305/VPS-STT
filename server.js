@@ -34,7 +34,7 @@ function modelReadAudio(path) {
 
   let model = new DeepSpeech.Model(modelPath);
 
-  let desiredSampleRate = model.sampleRate();
+  // let desiredSampleRate = model.sampleRate();
 
   let scorerPath = "./models/deepspeech-0.9.3-models.scorer";
 
