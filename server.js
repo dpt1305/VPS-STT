@@ -107,6 +107,7 @@ app.post("/uploadfile", upload.single("file"), (req, res, next) => {
     error.httpStatusCode = 400;
     return next(error);
   }
+  console.log(file);
   const result = modelReadAudio(file.path);
   res.send(result);
 });
