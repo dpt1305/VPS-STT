@@ -49,17 +49,17 @@ function modelReadAudio(audio) {
   }
 
   const buffer = Fs.readFileSync(audioFile);
-  const result = Wav.decode(buffer);
+  // const result = Wav.decode(buffer);
 
-  if (result.sampleRate < desiredSampleRate) {
-    console.error(
-      "Warning: original sample rate (" +
-        result.sampleRate +
-        ") is lower than " +
-        desiredSampleRate +
-        "Hz. Up-sampling might produce erratic speech recognition."
-    );
-  }
+  // if (result.sampleRate < desiredSampleRate) {
+  //   console.error(
+  //     "Warning: original sample rate (" +
+  //       result.sampleRate +
+  //       ") is lower than " +
+  //       desiredSampleRate +
+  //       "Hz. Up-sampling might produce erratic speech recognition."
+  //   );
+  // }
 
   function bufferToStream(buffer) {
     let stream = new Duplex();
