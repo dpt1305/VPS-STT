@@ -93,11 +93,11 @@ function modelReadAudio(path) {
 
     const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
 
-    let result = model.stt(audioBuffer);
+    const result = model.stt(audioBuffer);
     console.log("result:", result);
 
-    return result;
   });
+  return result;
 }
 
 app.post("/uploadfile", upload.single("file"), async  (req, res, next) => {
