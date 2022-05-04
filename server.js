@@ -93,7 +93,7 @@ function modelReadAudio(path) {
 
     const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
 
-    const result1 = model.stt(audioBuffer);
+    result1 = model.stt(audioBuffer);
     console.log("result:", result1);
 
   });
