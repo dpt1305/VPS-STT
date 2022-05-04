@@ -109,7 +109,7 @@ app.post("/uploadfile", upload.single("file"), (req, res, next) => {
   }
 
   const result = modelReadAudio(file.path);
-  res.send(result);
+  res.send('result');
 });
 
 app.listen(port, () => {
