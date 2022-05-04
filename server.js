@@ -88,7 +88,7 @@ function modelReadAudio(path) {
     )
     .pipe(audioStream);
 
-  audioStream.on("finish", () => {
+  audioStream.on("finish", async  () => {
     let audioBuffer = audioStream.toBuffer();
 
     const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
@@ -100,7 +100,7 @@ function modelReadAudio(path) {
   });
 }
 
-app.post("/uploadfile", upload.single("file"), (req, res, next) => {
+app.post("/uploadfile", upload.single("file"), async  (req, res, next) => {
   const file = req.file;
   if (!file) {
     const error = new Error("Please upload a file");
@@ -108,8 +108,8 @@ app.post("/uploadfile", upload.single("file"), (req, res, next) => {
     return next(error);
   }
 
-  const result = modelReadAudio(file.path);
-  res.send('result');
+  const result = await modelReadAudio(file.path);
+  res.send(result);
 });
 
 app.listen(port, () => {
