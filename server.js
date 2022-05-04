@@ -92,7 +92,6 @@ function modelReadAudio(path) {
     let audioBuffer = audioStream.toBuffer();
 
     const audioLength = (audioBuffer.length / 2) * (1 / desiredSampleRate);
-    console.log("audio length", audioLength);
 
     let result = model.stt(audioBuffer);
     console.log("result:", result);
@@ -103,22 +102,16 @@ function modelReadAudio(path) {
 
 app.post("/uploadfile", upload.single("file"), (req, res, next) => {
   const file = req.file;
-  // var img = fs.readFile(req.file.path);
   if (!file) {
     const error = new Error("Please upload a file");
     error.httpStatusCode = 400;
     return next(error);
   }
-  console.log(file);
+
   const result = modelReadAudio(file.path);
   res.send(result);
 });
-// app.get("/uploadfile", (req, res) => {
-//   file.on("data", (chunk) => {
-//     // Send chunk to client
-//     res.send(chunk); // May be?
-//   });
-// });
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
