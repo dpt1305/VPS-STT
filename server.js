@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-function modelReadAudio(path) {
+function modelReadAudio(path, res) {
   const DeepSpeech = require("deepspeech");
   const Fs = require("fs-extra");
   const Sox = require("sox-stream");
@@ -95,8 +95,9 @@ function modelReadAudio(path) {
 
     result1 = model.stt(audioBuffer);
     console.log("result:", result1);
-
+    res.send(result1);
   });
+  console.log(1111111111, result1);
   return result1;
 }
 
@@ -108,8 +109,8 @@ app.post("/uploadfile", upload.single("file"), async  (req, res, next) => {
     return next(error);
   }
 
-  const result = await modelReadAudio(file.path);
-  res.send(result);
+  const result = await modelReadAudio(file.path, res);
+  // res.send(result);
 });
 
 app.listen(port, () => {
