@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-function modelReadAudio(path, res) {
+function modelReadAudio(req, res) {
   const DeepSpeech = require("deepspeech");
   const Fs = require("fs-extra");
   const Sox = require("sox-stream");
@@ -41,7 +41,8 @@ function modelReadAudio(path, res) {
 
   model.enableExternalScorer(scorerPath);
 
-  let audioFile = path;
+  console.log(req.file);
+  let audioFile = req.file.path;
 
   if (!Fs.existsSync(audioFile)) {
     console.log("file missing:", audioFile);
@@ -95,23 +96,16 @@ function modelReadAudio(path, res) {
 
     result1 = model.stt(audioBuffer);
     console.log("result:", result1);
-    res.send(result1);
+    res.status(200).json({
+      data: result1,
+      message: 'Success',
+    });
   });
-  console.log(1111111111, result1);
-  return result1;
 }
 
-app.post("/uploadfile", upload.single("file"), async  (req, res, next) => {
-  const file = req.file;
-  if (!file) {
-    const error = new Error("Please upload a file");
-    error.httpStatusCode = 400;
-    return next(error);
-  }
-
-  const result = await modelReadAudio(file.path, res);
-  // res.send(result);
-});
+app.post("/uploadfile", upload.single("file"),  (req, res, next) => {
+  const result = modelReadAudio(req, res);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
