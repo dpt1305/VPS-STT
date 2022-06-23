@@ -77,7 +77,7 @@ function modelReadAudio(req, res) {
           "no-dither": true,
         },
         input: {
-          volume: 0.9,
+          volume: 0.85,
         },
         output: {
           bits: 16,
