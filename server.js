@@ -76,6 +76,9 @@ function modelReadAudio(req, res) {
         global: {
           "no-dither": true,
         },
+        input: {
+          volume: 0.9,
+        },
         output: {
           bits: 16,
           rate: desiredSampleRate,
